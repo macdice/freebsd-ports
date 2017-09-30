@@ -1,0 +1,12 @@
+bin/pg_createcluster
+bin/pg_ctlcluster
+bin/pg_dropcluster
+bin/pg_lsclusters
+bin/pg_renamecluster
+bin/pg_virtualenv
+man/man1/pg_createcluster.1.gz
+man/man1/pg_ctlcluster.1.gz
+man/man1/pg_dropcluster.1.gz
+man/man1/pg_lsclusters.1.gz
+man/man1/pg_renamecluster.1.gz
+man/man1/pg_virtualenv.1.gz

@@ -13,12 +13,6 @@ COMMENT?=	PostgreSQL is the most advanced open-source database available anywher
 
 LICENSE=	PostgreSQL
 
-.if ${DISTVERSION:C/([0-9]*).*/\1/} == 10
-CONFLICTS+=	${PORTNAME}*-9.*
-.else
-CONFLICTS+=	${PORTNAME}*-9.[^${PORTVERSION:R:E}].* ${PORTNAME}10*
-.endif
-
 WRKSRC=		${WRKDIR}/postgresql-${DISTVERSION}
 DIST_SUBDIR=	postgresql
 
@@ -36,10 +30,16 @@ PG_USER?=	postgres
 PG_GROUP?=	postgres
 PG_UID?=	770
 
+PG_MAJOR_VERSION=${DISTVERSION:C/(9\.[0-9]|[0-9]*).*/\1/}
 LDFLAGS+=	-L${LOCALBASE}/lib
 INCLUDES+=	-I${LOCALBASE}/include
 CONFIGURE_ARGS+=--with-libraries=${PREFIX}/lib \
 		--with-includes=${PREFIX}/include \
+		--prefix=${PREFIX}/lib/postgresql/${PG_MAJOR_VERSION} \
+		--exec-prefix=${PREFIX}/lib/postgresql/${PG_MAJOR_VERSION} \
+		--datarootdir=${PREFIX}/share/postgresql/${PG_MAJOR_VERSION} \
+		--mandir=${PREFIX}/share/postgresql/${PG_MAJOR_VERSION}/man \
+		--includedir=${PREFIX}/include/postgresql/${PG_MAJOR_VERSION} \
 		--enable-thread-safety
 CONFIGURE_ENV+=	INCLUDES="${INCLUDES}" \
 		PTHREAD_LIBS="-lpthread" \
@@ -155,7 +155,9 @@ OPTIMIZED_CFLAGS_CFLAGS=	-O3 -funroll-loops
 DEBUG_CONFIGURE_ENABLE=	debug
 
 PLIST_SUB+=	PG_USER=${PG_USER} \
-		PG_GROUP=${PG_GROUP}
+		PG_GROUP=${PG_GROUP} \
+		PG_USER_regex=\b${PG_USER}\b \
+		PG_GROUP_regex=\b${PG_GROUP}\b
 SUB_LIST+=	PG_GROUP=${PG_GROUP} \
 		PG_USER=${PG_USER} \
 		PG_UID=${PG_UID}
